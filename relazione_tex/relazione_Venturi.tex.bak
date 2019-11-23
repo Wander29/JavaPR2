@@ -1,0 +1,94 @@
+\documentclass[12pt, a4paper]{article}
+%-----------------------
+%- 	PACKAGES & SETTINGS
+%-----------------------
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    filecolor=magenta,      
+    urlcolor=blue,
+    linkcolor=black
+}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{listings}
+\lstset{language=c}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+ 
+%-----------------------
+%- 	TITLE
+%-----------------------
+\title{\textbf{Relazione Progetto Java PR 2}}
+\author{\textbf{Venturi} Ludovico\\Docente: \href{http://pages.di.unipi.it/levi/}{Francesca Levi}}
+\date{UNIPI, Novembre 2019}
+
+
+%-----------------------
+%- 	DOCUMENT
+%-----------------------
+\begin{document}
+%- 	INTRO
+\pagenumbering{roman} 
+\maketitle
+\tableofcontents
+\vfill
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.07]{javaLogo}
+	\label{fig:0}
+\end{figure}
+
+\clearpage
+
+%- 	START DOC
+\pagenumbering{arabic} 
+
+\section{Introduzione}
+\begin{lstlisting}
+	for i = 0 to n
+		print "staminchia"
+\end{lstlisting}
+% \href{www.multiplayer.it}{MULTIPLAYER}
+% figura \ref{fig:im2} \pageref{fig:im2}
+ 
+%\begin{itemize}
+%  \item The individual entries are indicated %with a black dot, a so-called bullet.
+%  \item The text in the entries may be of any %length.
+%\end{itemize}
+
+%$\begin{enumerate}
+
+
+
+%\begin{equation}
+%E=mc^2
+%\end{equation}
+%\subsection{daie}
+%\label{sec:daie1}
+%$ E=mc^2 $
+%$\Omega + 3 = 54$\\
+%$\omega * 54$
+
+%\ref{table:tab1} SEZIONE \ref{sec:daie1}
+
+%h = here
+%\begin{table}[h]
+%\centering
+%\begin{tabular}{|c|c|r|}
+%	\hline
+%		cell1 & gatto & gattini \\
+%	\hline
+%		cell1 & gatto & 12 \\
+%	\hline
+%		cell1 & gatto & gattini \\
+%	\hline
+%\end{tabular}
+%\label{table:tab1}
+%\end{table}
+
+
+\end{document}
