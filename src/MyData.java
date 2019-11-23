@@ -6,12 +6,14 @@ public class MyData extends Data{
 
 	public void display() {
 		System.out.println("DATO: " + super.getDataName());
+		System.out.println("Categoria: " + super.getCategory());
+		System.out.println("Contenuto: " + super.getContent());
 		/*
 		System.out.println("LIKES: ");
 		for (String s : likes) 
 			System.out.print(s + "  ");
 		*/
-		System.out.println("----------");
+		System.out.println("------------------");
 	}
 	
 	

@@ -5,4 +5,3 @@ public class HiddenCategoryException extends RuntimeException{
 	public HiddenCategoryException() { super(); }
 }
 
-}

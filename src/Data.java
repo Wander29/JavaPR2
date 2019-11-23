@@ -15,18 +15,19 @@ public abstract class Data {
 	public Data(String name, String cont, String cat) throws NullPointerException {
 		/* @REQUIRES 		name != null
 		 * 				&&	cont != null
-		 * 				&& 	cat != null
+		 * 				&&	cat  != null
 		 * @EFFECTS 	istanzia this
 		 * @THROWS 		if name == null || cont == null || cat == null
 		 * 					throws NullPointerException
 		 */
-		if(name == null || cont == null || cat == null) throw new NullPointerException();
+		if(name == null || cont == null) throw new NullPointerException();
 		
 		dataName = name;
 		content = cont;
 		category = cat;
 	}
 	
+	//verrà implementato dalle sottoclassi
 	public abstract void display();
 	
 	public String getDataName() {

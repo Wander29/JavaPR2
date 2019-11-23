@@ -1,13 +1,12 @@
 import java.util.*;
-import java.util.Iterator;
 
 public class Board<E extends Data> implements DataBoard<E> {
 /* OVERVIEW 	Collezione di oggetti generici che estendono il tipo di dato Data
  * 				Basata sull'interfaccia DataBoard<E extends Data>
  * 				È una struttura mutable, unbounded
  * 
- * 	AF() : 	{ psw, CATEGORIES, FRIENDS tc
- * 						categories.get(cat_i)	-> 	{d_i in DATA, #likes{d_i}, { friend0, f1, ..., f_z }
+ * 	AF() : 		{ psw, CATEGORIES, FRIENDS tc
+ * 						categories.get(cat_i)	-> 	{ d_i in DATA, #likes{d_i}, { friend0, f1, ..., f_z } }
  * 						friends(f_i)	-> 	{ cat_p, ... , cat_z }
  * 				}
  * 
@@ -27,13 +26,13 @@ public class Board<E extends Data> implements DataBoard<E> {
  * 
  */
 	
-	private class InternalData{
+	private class InternalData<T extends Data>{
 	// STRUCT di appoggio, collega ad un dato la lista di amici che mettono un like e il numero dei likes
-		E data;
+		T data;
 		ArrayList<String> friendsWhoLiked;
 		int likes;
 		
-		InternalData (E data) {
+		InternalData (T data) {
 			this.data = data;
 			friendsWhoLiked = new ArrayList<>();
 			likes = 0;
@@ -53,111 +52,134 @@ public class Board<E extends Data> implements DataBoard<E> {
 	private HashMap<String, ArrayList<InternalData<E>>> categories;
 	private HashMap<String, ArrayList<String>> friends;
 	
-	public Board(String nome, String psw_plain) {
+	// controlli sulla password effettuati dal chiamante
+	public Board(String psw_plain) {
 		psw = MyPasswordCrypt.cryptPsw(psw_plain);
 		
-		categories = new HashMap<>();
+		categories = new HashMap<>(); // inferenza di tipi generici
 		friends = new HashMap<>();
 	}
 	
-	// Crea una categoria di dati se vengono rispettati i controlli di identità
 	public void createCategory(String category, String psw_plain) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
 		if(category == null || psw_plain == null) throw new NullPointerException();
 		
-		if(!login(psw_plain)) throw new WrongPasswordException();
+		if(! login(psw_plain)) throw new WrongPasswordException();
 		
-		if(categories.containsKey(category)) throw new IllegalArgumentException();
+		if(categories.containsKey(category)) throw new IllegalArgumentException("Categoria già presente");
 		
 		categories.put(category, new ArrayList<>());
 	}
 	
-	// Rimuove una categoria di dati
-	// se vengono rispettati i controlli di identità
-	public void removeCategory(String category, String 	psw_plain) {
-		if(!login(psw_plain)) throw new WrongPasswordException();
+	public void removeCategory(String category, String 	psw_plain) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
-		if(category == null) throw new NullPointerException();
+		if(category == null || psw_plain == null) throw new NullPointerException();
 		
-		if(categories.containsKey(category)) 
-			categories.remove(category);
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
+		
+		categories.remove(category);
 	}
 	
-	public void addFriend(String category, String psw_plain, String friend) throws WrongPasswordException, NullPointerException {
-		if (!login(psw_plain)) throw new WrongPasswordException();
+	public void addFriend(String category, String psw_plain, String friend) throws WrongPasswordException, NullPointerException, IllegalArgumentException {
 		
-		if(category == null) throw new NullPointerException();
+		if(category == null || friend == null || psw_plain == null) throw new NullPointerException();
 		
-		if(friend == null) throw new NullPointerException();
+		if(! login(psw_plain)) throw new WrongPasswordException();
 		
-		if (! friends.containsKey(friend))
-			friends.put(friend, new ArrayList<>());
+		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
-		friends.get(friend).add(category);	
+		if(! friends.containsKey(friend))
+			friends.put(friend, new ArrayList<>()).add(category);
+		else {
+			if(friends.get(friend).contains(category)) throw new IllegalArgumentException(friend + " ha già accesso a" + category);
+			else
+				friends.get(friend).add(category);	
+		}
 	}
 	
-
-	public void removeFriend(String category, String psw_plain, String friend) {
-		if (!login(psw_plain)) throw new WrongPasswordException();
+	public void removeFriend(String category, String psw_plain, String friend) throws HiddenCategoryException, NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
-		if(category == null) throw new NullPointerException();
+		if(category == null || friend == null || psw_plain == null) throw new NullPointerException();
 		
-		if(friend == null) throw new NullPointerException();
+		if(! login(psw_plain)) throw new WrongPasswordException();
 		
-		if(friends.containsKey(friend))
-			friends.get(friend).remove(category);
+		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
+		
+		if(! friends.containsKey(friend)) throw new IllegalArgumentException(friend + " NON è un amico valido");	
+		
+		if(! friends.get(friend).contains(category)) throw new HiddenCategoryException("Categoria NON condivisa con" + friend);
+		
+		friends.get(friend).remove(category);
 	}
 	
-	public boolean put(String psw_plain, E data, String category) {
-		if(!login(psw_plain)) throw new WrongPasswordException();
+	public boolean put(String psw_plain, E data, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
-		if(category == null) throw new NullPointerException();
+		if(category == null || data == null || psw_plain == null) throw new NullPointerException();
 		
-		if(data == null) throw new NullPointerException();
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		// la categoria del dato ha priorità superiore ==>
+		if (category != data.getCategory())
+			category = data.getCategory();
+		
+		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
 		if(categories.get(category) == null)
-			categories.put(category, new ArrayList<>());
-		
-		// IF data esiste già -> FALSE
+			categories.put(category, new ArrayList<>()).add(new InternalData<E>(data));
+		else {
+			ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
+			// controlle se dati uguali, confronto fra InternalData<E> ed E
+			for (int i=0; i<tmp.size(); i++)
+				if( tmp.get(i).data.equals(data) ) throw new IllegalArgumentException("DATO già presente: " + data.getDataName());
 			
-		categories.get(category).add(new InternalData<E>(data));
+			categories.get(category).add(new InternalData<E>(data));	
+		}	
 		
 		return true;
 	}
 	
-	public E get(String psw_plain, E data) {
-		if(!login(psw_plain)) throw new WrongPasswordException();
+	public E get(String psw_plain, E data) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
-		if(data == null) throw new NullPointerException();
+		if(data == null || psw_plain == null) throw new NullPointerException();
+		
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
 		
 		ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<categories.size(); i++) {
+		for (int i=0; i<tmp.size(); i++) {
 			if (tmp.get(i).data.equals(data)) {
 				return tmp.get(i).data;
 			}
 		}	
-		return null;
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
 	}
 	
-	public E remove(String psw_plain, E data) {
-		if(!login(psw_plain)) throw new WrongPasswordException();
-				
-		if(data == null) throw new NullPointerException();
+	public E remove(String psw_plain, E data) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
+
+		if(data == null || psw_plain == null) throw new NullPointerException();
+		
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
 		
 		ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<categories.size(); i++) {
+		for (int i=0; i<tmp.size(); i++) {
 			if (tmp.get(i).data.equals(data))
 				return tmp.remove(i).data;
 		}	
-		return null;
-		
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
 	}
 	
-	
-	public List<E> getDataCategory(String psw_plain, String category) {
-		if(!login(psw_plain)) throw new WrongPasswordException();
+	public List<E> getDataCategory(String psw_plain, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
 		
-		if(category == null) throw new NullPointerException();
+		if(category == null || psw_plain == null) throw new NullPointerException();
+		
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
 		ArrayList<E> a = new ArrayList<>();
 		for(InternalData<E> tmp : categories.get(category)) {
@@ -168,27 +190,41 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 	}
 	
-	public void insertLike(String friend, E data) {
-		if(friend == null) throw new NullPointerException();
+	public void insertLike(String friend, E data) throws DuplicateLikeException, HiddenCategoryException, NullPointerException, IllegalArgumentException {
 		
-		if(data == null) throw new NullPointerException();
+		if(friend == null || data == null) throw new NullPointerException();
 		
-		if(! friends.get(friend).contains(data.getCategory())) 
-			throw new HiddenCategoryException(friend + "non ha accesso alla categoria di" + data.getDataName());
+		if(! categories.containsKey(data.getCategory()))  throw new IllegalArgumentException("Categoria del dato NON valida");	
+		
+		if(! friends.containsKey(friend)) throw new IllegalArgumentException(friend + " NON è un amico valido");
+		
+		if(! friends.get(friend).contains(data.getCategory()) ) 
+			throw new HiddenCategoryException(friend + " non ha accesso alla categoria " + data.getCategory());
 		
 		ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<categories.size(); i++) {
+		for (int i=0; i<tmp.size(); i++) {
 			if (tmp.get(i).data.equals(data)) {
 				if(! tmp.get(i).friendsWhoLiked.contains(friend))
 					tmp.get(i).addLike(friend);
+				else
+					throw new DuplicateLikeException(friend + " ha già messo like al dato " + data.getDataName());
+				return;
 			}
 		}
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
 	}
 	
-	public Iterator<E> getIterator(String passw) {
+	// ITERATORE SU TUTTI I DATI
+	public Iterator<E> getIterator(String psw_plain) throws ConcurrentModificationException, NullPointerException, WrongPasswordException {
+		
+		if(psw_plain == null) throw new NullPointerException();
+		
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
 		return new LikeSortedDataIterator();
 	}
 	
+	// produce una lista di TUTTI i dati presenti in bacheca
 	private ArrayList<InternalData<E>> genAllData() {
 		
 		ArrayList<InternalData<E>> v = new ArrayList<InternalData<E>>();
@@ -200,21 +236,17 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 	}
 	
+	// classe di comparazione per ordinamento relativo ai like, ORDINE decrescente
 	private class MyComparator implements Comparator<InternalData<E>> {
-
 		@Override
 		public int compare(InternalData<E> arg0, InternalData<E> arg1) {
-			return arg0.likes - arg1.likes;
+			return arg1.likes - arg0.likes;	// decrescente
 		}
-		
 	}
 	
+	// classe privata che genera iteratori di istanza per l'iteratore su tutti i dati
 	private class LikeSortedDataIterator implements Iterator<E> {
 
-		/*	@REQUIRES 		La struttura non deve essere modificata durante l'iterazione
-		 * 
-		 * 
-		 */
 		int ind;
 		ArrayList<InternalData<E>> a;
 		
@@ -228,7 +260,6 @@ public class Board<E extends Data> implements DataBoard<E> {
 		public boolean hasNext() {
 			if (ind >= a.size() || a.get(ind+1) == null)
 				return false;
-			
 			return true;
 		}
 
@@ -245,20 +276,26 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 	}
 	
-	public Iterator<E> getFriendIterator(String friend) {
+	// ITERATORE SUI DATI CONDIVISI
+	public Iterator<E> getFriendIterator(String friend) throws ConcurrentModificationException, NullPointerException, IllegalArgumentException {
+		
+		if (friend == null) throw new NullPointerException();
+		
+		if (! friends.containsKey(friend)) throw new IllegalArgumentException(friend + " NON è un amico valido");	
+		
 		return new FriendIterator(friend);
 	}
 	
+	// classe privata che genera iteratori di istanza per l'iteratore sui dati condivisi
 	private class FriendIterator implements Iterator<E> {
 		
 		int ind;
 		ArrayList<InternalData<E>> a;
 		
 		public FriendIterator(String f) {
-			ArrayList<String> cat_of_f = friends.get(f);
 			a = new ArrayList<>();
 			
-			for (String s : cat_of_f) {
+			for (String s : friends.get(f)) {
 				a.addAll(categories.get(s));
 			}
 		}
@@ -282,6 +319,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 		}
 	}
 		
+	// confronta le password
 	private boolean login(String psw_plain) {
 		return MyPasswordCrypt.cmpPasswords(psw, MyPasswordCrypt.cryptPsw(psw_plain));
 	}

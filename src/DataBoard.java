@@ -16,10 +16,11 @@ public interface DataBoard<E extends Data> {
  *  						for all j in [0, |CATEGORIES|). c_j != null && (for all k in (j, |CATEGORIES|). c_j != c_k)
  *  
  *  					functions:
- *  						f(FRIEND) 	-> 	{ c0, ..., c_f } in CATEGORIES, con c0 != ... != c_f != null
- *  						g(DATA) 	-> 	{ c in CATEGORIES, #like, { friend0, f1, ... , f_z } } con
- *  											c != null, #like >= 0, f0 != ... != f_z != null
- *  						h(CATEGORY) -> 	{ d_i, ..., d_l ) con d_i != ... != d_l != null
+ *  						f(FRIEND) 	-> 	{ c0, ..., c_f }  con c0 != ... != c_f != null in CATEGORIES 
+ *  						g(DATA) 	-> 	{ c in CATEGORIES, #like, { friend0, f1, ... , f_q } } 
+ *  											con  c != null, #like >= 0 && friend0 != f1 != ... != f_q != null
+ *  						h(CATEGORY) -> 	{ {d_i, ..., d_l}, { friend0, f1, ... , f_z } }  
+ *  											con d_i != ... != d_l != null && f0 != ... != f_z != null
  *  						i(this) 	-> 	{ 	psw, 
  *  											{ 	<category0, data0> , <c0, d1> ... ,	<c0, d_x> ...
  *  												<category_m, data_n>, .... 		  , <c_m, d_y> } ,
@@ -45,7 +46,7 @@ public interface DataBoard<E extends Data> {
 	
 	// Rimuove una categoria di dati
 	// se vengono rispettati i controlli di identità
-	public void removeCategory(String category, String passw);
+	public void removeCategory(String category, String passw) throws NullPointerException, WrongPasswordException, IllegalArgumentException;
 	/* 	@REQUIRES		category != null 
 	 * 				&& 	passw != null 
 	 * 				&& 	passw == this.psw 
@@ -62,7 +63,7 @@ public interface DataBoard<E extends Data> {
 	
 	// Aggiunge un amico ad una categoria di dati
 	// se vengono rispettati i controlli di identità
-	public void addFriend(String category, String passw, String friend);
+	public void addFriend(String category, String passw, String friend) throws NullPointerException, WrongPasswordException, IllegalArgumentException ;
 	/*	@REQUIRES		category != null 
 	 * 				&& 	passw  != null 
 	 * 				&& 	friend != null
@@ -82,7 +83,7 @@ public interface DataBoard<E extends Data> {
 	
 	// rimuove un amico da una categoria di dati
 	// se vengono rispettati i controlli di identità
-	public void removeFriend(String category, String passw, String friend);
+	public void removeFriend(String category, String passw, String friend) throws HiddenCategoryException, NullPointerException, WrongPasswordException, IllegalArgumentException ;
 	/*	@REQUIRES		category != null 
 	 * 				&& 	passw  != null 
 	 * 				&& 	friend != null
@@ -97,14 +98,15 @@ public interface DataBoard<E extends Data> {
 	 *  				throws NullPointerException (disp. in Java, unchecked)
 	 *  			if passw != this.psw
 	 *  				throws WrongPasswordException (non disp. in Java, unchecked)
-	 *  			if NOT (category IN f(friend)) 	|| NOT (EXISTS i in CATEGORIES. c_i == category )
-	 *  											|| NOT (EXISTS j in FRIENDS . f_j == friend)
+	 *  			if NOT (EXISTS i in CATEGORIES. c_i == category ) || NOT (EXISTS j in FRIENDS . f_j == friend)
 	 *  				throws IllegalArgumentException (disp. in Java, unchecked) 
+	 *  			if NOT (category IN f(friend))
+	 *  				throws HiddenCategoryException (non disp. in Java, unchecked)
 	 */
 	
 	//Inserisce un dato in bacheca
 	// se vengono rispettati i controlli di identità
-	public boolean put(String passw, E dato, String category);
+	public boolean put(String passw, E dato, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException ;
 	/* 	@REQUIRES	category != null 
 	 * 				&& 	passw  != null 
 	 * 				&& 	dato != null
@@ -119,14 +121,13 @@ public interface DataBoard<E extends Data> {
 	 *  			if passw != this.psw
 	 *  				throws WrongPasswordException (non disp. in Java, unchecked)
 	 *  			if NOT (EXISTS i in CATEGORIES. c_i == category ) 	|| EXISTS j in [0, |DATA|). d_j == dato
-	 *  																|| cat_dato != category
 	 *  				throws IllegalArgumentException (disp. in Java, unchecked) 
 	 */
 		
 	
 	//Restituisce una copia del dato in bacheca
 	// se vengono rispettati i controlli di identità
-	public E get(String passw, E dato);
+	public E get(String passw, E dato) throws NullPointerException, WrongPasswordException, IllegalArgumentException ;
 	/* 	@REQUIRES	passw  != null 
 	 * 				&& 	dato != null
 	 * 				&& 	passw == this.psw 
@@ -143,7 +144,7 @@ public interface DataBoard<E extends Data> {
 	
 	// Rimuove il dato dalla bacheca
 	// se vengono rispettati i controlli di identità
-	public E remove(String passw, E dato);
+	public E remove(String passw, E dato) throws NullPointerException, WrongPasswordException, IllegalArgumentException;
 	/* 	@REQUIRES	passw  != null 
 	 * 				&& 	dato != null
 	 * 				&& 	passw == this.psw 
@@ -160,7 +161,7 @@ public interface DataBoard<E extends Data> {
 	
 	// Crea la lista dei dati in bacheca di una determinata categoria
 	// se vengono rispettati i controlli di identità
-	public List<E> getDataCategory(String passw, String category);
+	public List<E> getDataCategory(String passw, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException;
 	/* 	@REQUIRES	category != null 
 	 * 				&& 	passw  != null 
 	 * 				&& 	passw == this.psw 
@@ -178,7 +179,7 @@ public interface DataBoard<E extends Data> {
 	 */
 	
 	// Aggiunge un like a un dato
-	void insertLike(String friend, E data);
+	void insertLike(String friend, E data) throws DuplicateLikeException, HiddenCategoryException, NullPointerException, IllegalArgumentException;
 	/* 	@REQUIRES		data != null
 	 * 				&& 	friend != null
 	 * 				&& 	EXISTS j in FRIENDS . f_j == friend
@@ -190,16 +191,18 @@ public interface DataBoard<E extends Data> {
 	 *  				post( g(data) ) = { c in CATEGORIES, #like + 1, { friend0, f1, ... , f_z } U  friend }
 	 *  @THROWS 	if friend == null || data == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
-	 *  			if NOT (EXISTS j in FRIENDS . f_j == friend) || NOT (data IN DATA) || friend IN g(data)
+	 *  			if NOT (EXISTS j in FRIENDS . f_j == friend) || NOT (data IN DATA)
 	 *  				throws IllegalArgumentException (disp. in Java, unchecked) 
 	 *  			if NOT (cat_data IN f(friend) )
 	 *  				throws HiddenCategoryException (non disp. in Java, unchecked)
+	 *  			if friend in g(data)
+	 *  				throw DuplicateLikeException (non disp. in Java, unchecked)
 	 */
 	
 	// restituisce un iteratore (senza remove) che genera tutti i dati in
 	// bacheca ordinati rispetto al numero di like
 	// se vengono rispettati i controlli di identità
-	public Iterator<E> getIterator(String passw);
+	public Iterator<E> getIterator(String passw) throws ConcurrentModificationException, NullPointerException, WrongPasswordException;
 	/* 	@REQUIRES		this non modificato durante tutta l'iterazione
 	 * 				&& 	passw  != null 
 	 * 				&& 	passw == this.psw 
@@ -216,7 +219,7 @@ public interface DataBoard<E extends Data> {
 	
 	// restituisce un iteratore (senza remove) che genera tutti i dati in
 	// bacheca condivisi
-	public Iterator<E> getFriendIterator(String friend);
+	public Iterator<E> getFriendIterator(String friend) throws ConcurrentModificationException, NullPointerException, IllegalArgumentException;
 	/* 	@REQUIRES		this non modificato durante tutta l'iterazione
 	 * 				&& 	friend  != null 
 	 * 				&& 	friend IN FRIENDS
@@ -229,6 +232,9 @@ public interface DataBoard<E extends Data> {
 	 *  				throws ConcurrentModificationException
 	 *  			if friend == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
+	 *  			if NOT (EXISTS j in FRIENDS . f_j == friend)
+	 *  				throws IllegalArgumentException (disp. in Java, unchecked) 
+	 *  				
 	 */
 	
 }
