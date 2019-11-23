@@ -14,8 +14,6 @@
 }
 \urlstyle{same}
 \usepackage{amsmath}
-\usepackage{listings}
-\lstset{language=c}
 \usepackage{graphicx}
 \graphicspath{ {images/} }
  
@@ -46,12 +44,34 @@
 
 %- 	START DOC
 \pagenumbering{arabic} 
+\section{Scelte progettuali}
+Nella relazione verranno spiegate le scelte di implementazione e progettuali che sono state prese.
 
-\section{Introduzione}
-\begin{lstlisting}
-	for i = 0 to n
-		print "staminchia"
-\end{lstlisting}
+\subsection{Data}
+\begin{center}
+OVERVIEW: \textit{Data rappresenta un dato sottoforma di un insieme di 3 attributi e alcune operazioni. È una struttura astratta immutable, di dimensione finita e fissa.}
+\end{center}
+\textit{Data} viene implementata come classe astratta.
+Tale scelta deriva dalla volontà di attribuire a tutte le classi che discendono da \textit{Data} delle caratteristiche comuni, ovvero dei metodi già implementati e una struttura implementativa di base:
+\begin{center}
+	\textit{private String \textbf{dataName};\\
+	private String \textbf{content};\\
+	private String \textbf{category};\\}
+\end{center}
+Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi.
+\begin{center}
+	\textit{public abstract void display();}
+\end{center}
+\textit{Data} ridefinisce anche \textit{equals()} per permettere la deep equality e mette a disposizione dei getter per accedere ai dati privati in lettura.
+\subsubsection{Ipotesi}
+Non ci sono setter poichè si è ipotizzato che \textit{Data} fosse una struttura \textit{immutable}.
+
+
+
+
+\clearpage
+\section{Eseguire il codice}
+\subsection{Test ed esempi}
 % \href{www.multiplayer.it}{MULTIPLAYER}
 % figura \ref{fig:im2} \pageref{fig:im2}
  
