@@ -45,7 +45,7 @@
 %- 	START DOC
 \pagenumbering{arabic} 
 \section{Scelte progettuali}
-Nella relazione verranno spiegate le scelte di implementazione e progettuali che sono state prese.
+Nella relazione verranno spiegate le scelte progettuali e implementative che sono state prese.
 
 \subsection{Data}
 \begin{center}
@@ -58,7 +58,7 @@ Tale scelta deriva dalla volontà di attribuire a tutte le classi che discendono
 	private String \textbf{content};\\
 	private String \textbf{category};\\}
 \end{center}
-Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi.
+Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi:
 \begin{center}
 	\textit{public abstract void display();}
 \end{center}
@@ -70,7 +70,6 @@ Rappresenta un \textit{contratto} cui tutte le sottoclassi (= i vari dati) dovra
  \end{itemize}
  
 \begin{footnotesize}
-(setCategory() viene chiamato soltanto da )\\
 (Nel testo viene riportato «\textit{i dati possono essere
 visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}»: ciò è stato interpretato come: "la modifica consiste nell'aggiunta o la rimozione dei dati, non nella  modifica effettiva del contenuto dei dati").
 \end{footnotesize}
@@ -82,6 +81,7 @@ visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}
 \begin{itemize}
 \item Non sono ammessi elementi \textit{null}
 \item Non sono ammessi duplicati di alcun genere
+\item Il numero di likes non dipende solamente dal dato ma anche dalla bacheca in cui si trova $\Rightarrow$ \textit{Data} non possiede il contatore dei like: questo si trova nella bacheca, relativamente ad ogni dato
 \end{itemize}
 
 \subsubsection{Implementazione 1}
@@ -101,7 +101,7 @@ Non ho riportato la specifica di ogni metodo nel codice di \textit{Board«E exte
 \clearpage
 \section{Eseguire il codice}
 \subsection{Test ed esempi}
-Non saranno verificate \textit{tutte} i casi in cui parametri sono null per ovvie ragioni.\\
+Non saranno verificate \textit{tutte} i casi in cui parametri sono null per ovvie ragioni, così come tutte le eccezioni ripetute, quali i controlli che la categoria esista o che l'amico sia presente nella lista amici; per queste ultime, pur se generabili in differenti metodi, verranno esplicitamente testate solamente una volta ciascuna. In generale più istruzioni su un singolo blocco \textit{try} indicano che l'ultima sarà quella che genera l'eccezione mentre le precedenti sono eseguite con successo.\\
 Lista di test effettuati nel \textit{main}:
 \begin{itemize}
 \item password della bacheca « 8 caratteri
@@ -109,7 +109,22 @@ Lista di test effettuati nel \textit{main}:
 \item password errata
 \item categoria già presente
 \item rimozione di una categoria non presente
-\item 
+\item condivisione di una stessa categoria con uno stesso amico
+\item condivisione di una categoria non presente nella bacheca
+\item rimozione di un amico non presente nella lista amici
+\item rimozione di un amico da una categoria cui non ha accesso, anche se presente nella lista amici
+\item inserimento di un dato già presente
+\item inserimento di un dato la cui categoria non è presente in bacheca
+\item get di un dato la cui categoria non è presente
+\item get di un dato non presente
+\item get di un dato precedentemente inserito in modo corretto ma la cui categoria è stato poi rimossa
+\item rimozione di un dato non presente
+\item getDataCategory e modifica della lista ritornata
+\item amico vuole inserire like ad un dato di una categoria non condivisa con lui
+\item amico vuole inserire like ad un dato cui lo ha già messo
+\item amico vuole inserire like ad un dato non presente
+\item ITERATORI, prove varie
+\item elimino una categoria e itero sui dati di tale categoria tramite una amico con cui essa era condivisa
 \end{itemize}
 % \href{www.multiplayer.it}{MULTIPLAYER}
 % figura \ref{fig:im2} \pageref{fig:im2}

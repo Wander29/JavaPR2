@@ -52,7 +52,9 @@ public interface DataBoard<E extends Data> {
 	 * 				&& 	passw == this.psw 
 	 * 				&& 	EXISTS i in CATEGORIES. c_i == category
 	 *  @MODIFIES	this
-	 *  @EFFECTS	CATEGORIES = pre(CATEGORIES) \ category;
+	 *  @EFFECTS	CATEGORIES = pre(CATEGORIES) \ category &&
+	 *  			for all f in FRIENDS tc category IN f(f)
+	 *  				post( f(f) ) = f(f) \ category
 	 *  @THROWS 	if category == null || passw == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
 	 *  			if passw != this.psw

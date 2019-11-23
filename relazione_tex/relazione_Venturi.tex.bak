@@ -101,12 +101,30 @@ Non ho riportato la specifica di ogni metodo nel codice di \textit{Board«E exte
 \clearpage
 \section{Eseguire il codice}
 \subsection{Test ed esempi}
-Non saranno verificate \textit{tutte} i casi in cui parametri sono null per ovvie ragioni.\\
+Non saranno verificate \textit{tutte} i casi in cui parametri sono null per ovvie ragioni, così come tutte le eccezioni ripetute, quali i controlli che la categoria esista o che l'amico sia presente nella lista amici; per queste ultime, pur se generabili in differenti metodi, verranno esplicitamente testate solamente una volta ciascuna. In generale più istruzioni su un singolo blocco \textit{try} indicano che l'ultima sarà quella che genera l'eccezione mentre le precedenti sono eseguite con successo.\\
 Lista di test effettuati nel \textit{main}:
 \begin{itemize}
 \item password della bacheca « 8 caratteri
 \item get di una bacheca non presente
 \item password errata
+\item categoria già presente
+\item rimozione di una categoria non presente
+\item condivisione di una stessa categoria con uno stesso amico
+\item condivisione di una categoria non presente nella bacheca
+\item rimozione di un amico non presente nella lista amici
+\item rimozione di un amico da una categoria cui non ha accesso, anche se presente nella lista amici
+\item inserimento di un dato già presente
+\item inserimento di un dato la cui categoria non è presente in bacheca
+\item get di un dato la cui categoria non è presente
+\item get di un dato non presente
+\item get di un dato precedentemente inserito in modo corretto ma la cui categoria è stato poi rimossa
+\item rimozione di un dato non presente
+\item getDataCategory e modifica della lista ritornata
+\item amico vuole inserire like ad un dato di una categoria non condivisa con lui
+\item amico vuole inserire like ad un dato cui lo ha già messo
+\item amico vuole inserire like ad un dato non presente
+\item ITERATORI, prove varie
+\item elimino una categoria e itero sui dati di tale categoria tramite una amico con cui essa era condivisa
 \end{itemize}
 % \href{www.multiplayer.it}{MULTIPLAYER}
 % figura \ref{fig:im2} \pageref{fig:im2}

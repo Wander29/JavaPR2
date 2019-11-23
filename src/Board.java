@@ -80,6 +80,11 @@ public class Board<E extends Data> implements DataBoard<E> {
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
 		categories.remove(category);
+		
+		for(String s : friends.keySet()) {
+			if(friends.get(s).contains(category))
+				friends.get(s).remove(category);
+		}
 	}
 	
 	public void addFriend(String category, String psw_plain, String friend) throws WrongPasswordException, NullPointerException, IllegalArgumentException {
@@ -90,10 +95,12 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
-		if(! friends.containsKey(friend))
-			friends.put(friend, new ArrayList<>()).add(category);
+		if(! friends.containsKey(friend)) {
+			friends.put(friend, new ArrayList<>());
+			friends.get(friend).add(category);
+		}
 		else {
-			if(friends.get(friend).contains(category)) throw new IllegalArgumentException(friend + " ha già accesso a" + category);
+			if(friends.get(friend).contains(category)) throw new IllegalArgumentException(friend + " ha già accesso a " + category);
 			else
 				friends.get(friend).add(category);	
 		}
@@ -109,7 +116,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 		if(! friends.containsKey(friend)) throw new IllegalArgumentException(friend + " NON è un amico valido");	
 		
-		if(! friends.get(friend).contains(category)) throw new HiddenCategoryException("Categoria NON condivisa con" + friend);
+		if(! friends.get(friend).contains(category)) throw new HiddenCategoryException("Categoria NON condivisa con " + friend);
 		
 		friends.get(friend).remove(category);
 	}
@@ -126,9 +133,10 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
-		if(categories.get(category) == null)
-			categories.put(category, new ArrayList<>()).add(new InternalData<E>(data));
-		else {
+		if(categories.get(category) == null) {
+			categories.put(category, new ArrayList<>());
+			categories.get(category).add(new InternalData<E>(data));
+		} else {
 			ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
 			// controlle se dati uguali, confronto fra InternalData<E> ed E
 			for (int i=0; i<tmp.size(); i++)
@@ -258,14 +266,14 @@ public class Board<E extends Data> implements DataBoard<E> {
 		
 		@Override	
 		public boolean hasNext() {
-			if (ind >= a.size() || a.get(ind+1) == null)
+			if (ind >= a.size() || a.get(ind) == null)
 				return false;
 			return true;
 		}
 
 		@Override
 		public E next() {
-			if (!hasNext())
+			if (! hasNext())
 				return null;
 			return a.get(ind++).data; 
 		}
@@ -302,7 +310,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 
 		@Override
 		public boolean hasNext() {
-			if (ind >= a.size() || a.get(ind+1) == null)
+			if (ind >= a.size() || a.get(ind) == null)
 				return false;
 			return true;
 		}
@@ -322,6 +330,34 @@ public class Board<E extends Data> implements DataBoard<E> {
 	// confronta le password
 	private boolean login(String psw_plain) {
 		return MyPasswordCrypt.cmpPasswords(psw, MyPasswordCrypt.cryptPsw(psw_plain));
+	}
+	
+	// restituisce il numero di like associato ad un dato se si rispettano le richieste
+	public int getNumLikes(String psw_plain, E data) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
+		/* 	@REQUIRES	psw_plain  != null 
+		 * 				&& 	data != null
+		 * 				&& 	psw_plain == this.psw 
+		 * 				&&  EXISTS j in [0, |DATA|). d_j == data
+		 *  @THROWS 	if passw == null || dat == null
+		 *  				throws NullPointerException (disp. in Java, unchecked)
+		 *  			if passw != this.psw
+		 *  				throws WrongPasswordException (non disp. in Java, unchecked)
+		 *  			if NOT (EXISTS j in [0, |DATA|). d_j == dato )
+		 *  				throws IllegalArgumentException (disp. in Java, unchecked) 
+		 */
+		if(data == null || psw_plain == null) throw new NullPointerException();
+		
+		if(! login(psw_plain)) throw new WrongPasswordException();
+		
+		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
+		
+		ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
+		for (int i=0; i<tmp.size(); i++) {
+			if (tmp.get(i).data.equals(data)) {
+				return tmp.get(i).likes;
+			}
+		}	
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
 	}
 	
 }
