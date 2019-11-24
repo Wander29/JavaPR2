@@ -1,37 +1,37 @@
 import java.util.HashMap;
 
-public class MyNetwork<E extends Data> {
+public class MyNetwork<E extends Data, T extends DataBoard<E>> {
 	// OVERVIEW 	Classe di supporto che contiene tutte le varie bacheche degli utenti, 
 	// 				può essere visto come un social netwrok dall'esterno
 	// 				Mutable, unbounded
 	
-	HashMap<String, Board<E>> users;
-	static final int MIN_LENGTH_PSW = 8;
+	HashMap<String, T> users;
 	
 	public MyNetwork() {
-		users = new HashMap<String, Board<E>>();
+		users = new HashMap<String, T>();
 	}
 	
-	public boolean addUser(String nome, String psw_plain) throws NullPointerException, IllegalArgumentException {
-		/* @REQUIRES 		nome != null && psw_plain != null
-		 * 				&&	psw.length() >= MIN_LENGTH_PSW
+	public boolean addUser(String nome, T board) throws NullPointerException, IllegalArgumentException {
+		/* @REQUIRES 		nome != null && board != null && ! users.containsKey(nome)
 		 * @MODIFIES 	this
-		 * @EFFECTS 	crea una nuova bacheca associata ad una coppia <utente, psw>
-		 * @THROWS 		if nome == null || psw_plain == null
+		 * @EFFECTS 	associa una bacheca ad un nome
+		 * @THROWS 		if nome == null || board == null
 		 * 					throws NullPointerException
-		 * 				if psw.length() < MIN_LENGTH_PSW
+		 * 				if users.containsKey(nome)
 		 * 					throws IllegalArgumentException
 		 */
-		if (nome == null || psw_plain == null) throw new NullPointerException();
-		if (psw_plain.length() < MIN_LENGTH_PSW) throw new IllegalArgumentException("La password NON rispetta i requisiti "
-				+ "minimi di lunghezza: almeno " +  MIN_LENGTH_PSW + " caratteri");
 		
-		users.put(nome, new Board<E>(psw_plain));
+		if (nome == null || board == null) throw new NullPointerException();
+		
+		if (users.containsKey(nome))
+				throw new IllegalArgumentException("Utente già presente");
+		
+		users.put(nome, board);
 		return true;
 	}
 	
 	// restituisce la bacheca associata all'utente s
-	public Board<E> getBoard(String s) throws NullPointerException, IllegalArgumentException {
+	public T getBoard(String s) throws NullPointerException, IllegalArgumentException {
 		
 		if(s == null) throw new NullPointerException();
 		

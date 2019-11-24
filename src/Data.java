@@ -8,7 +8,7 @@ public abstract class Data {
  * 				&&	content 	!= null
  * 				&&	cateogry 	!= null
  */
-	private String dataName;
+	private String dataTitle;
 	private String content;
 	private String category;
 	
@@ -30,8 +30,8 @@ public abstract class Data {
 	//verrà implementato dalle sottoclassi
 	public abstract void display();
 	
-	public String getDataName() {
-		return this.dataName;
+	public String getDataTitle() {
+		return this.dataTitle;
 	}
 	
 	public String getCategory() {

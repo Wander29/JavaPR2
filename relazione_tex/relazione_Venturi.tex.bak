@@ -45,7 +45,7 @@
 %- 	START DOC
 \pagenumbering{arabic} 
 \section{Scelte progettuali}
-Nella relazione verranno spiegate le scelte di implementazione e progettuali che sono state prese.
+Nella relazione verranno spiegate le scelte progettuali e implementative che sono state prese.
 
 \subsection{Data}
 \begin{center}
@@ -58,7 +58,7 @@ Tale scelta deriva dalla volontà di attribuire a tutte le classi che discendono
 	private String \textbf{content};\\
 	private String \textbf{category};\\}
 \end{center}
-Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi.
+Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi:
 \begin{center}
 	\textit{public abstract void display();}
 \end{center}
@@ -70,7 +70,6 @@ Rappresenta un \textit{contratto} cui tutte le sottoclassi (= i vari dati) dovra
  \end{itemize}
  
 \begin{footnotesize}
-(setCategory() viene chiamato soltanto da )\\
 (Nel testo viene riportato «\textit{i dati possono essere
 visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}»: ciò è stato interpretato come: "la modifica consiste nell'aggiunta o la rimozione dei dati, non nella  modifica effettiva del contenuto dei dati").
 \end{footnotesize}
@@ -82,6 +81,8 @@ visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}
 \begin{itemize}
 \item Non sono ammessi elementi \textit{null}
 \item Non sono ammessi duplicati di alcun genere
+\item il numero di likes non dipende solamente dal dato ma anche dalla bacheca in cui si trova $\Rightarrow$ \textit{Data} non possiede il contatore dei like: questo si trova nella bacheca, relativamente ad ogni dato
+\item la lista ritornata da \textit{getDataCategory} è in sola lettura, avendo precedentemente ipotizzato che Data sia immutable
 \end{itemize}
 
 \subsubsection{Implementazione 1}
@@ -107,6 +108,7 @@ Lista di test effettuati nel \textit{main}:
 \item password della bacheca « 8 caratteri
 \item get di una bacheca non presente
 \item password errata
+\item stringa nulla passata (vale per tutti i metodi)
 \item categoria già presente
 \item rimozione di una categoria non presente
 \item condivisione di una stessa categoria con uno stesso amico

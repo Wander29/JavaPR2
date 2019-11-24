@@ -81,7 +81,8 @@ visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}
 \begin{itemize}
 \item Non sono ammessi elementi \textit{null}
 \item Non sono ammessi duplicati di alcun genere
-\item Il numero di likes non dipende solamente dal dato ma anche dalla bacheca in cui si trova $\Rightarrow$ \textit{Data} non possiede il contatore dei like: questo si trova nella bacheca, relativamente ad ogni dato
+\item il numero di likes non dipende solamente dal dato ma anche dalla bacheca in cui si trova $\Rightarrow$ \textit{Data} non possiede il contatore dei like: questo si trova nella bacheca, relativamente ad ogni dato
+\item la lista ritornata da \textit{getDataCategory} è in sola lettura, avendo precedentemente ipotizzato che Data sia immutable
 \end{itemize}
 
 \subsubsection{Implementazione 1}
@@ -107,6 +108,7 @@ Lista di test effettuati nel \textit{main}:
 \item password della bacheca « 8 caratteri
 \item get di una bacheca non presente
 \item password errata
+\item stringa nulla passata (vale per tutti i metodi)
 \item categoria già presente
 \item rimozione di una categoria non presente
 \item condivisione di una stessa categoria con uno stesso amico

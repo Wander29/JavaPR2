@@ -1,11 +1,18 @@
 import java.util.*;
 
+//	@author	 Venturi Ludovico
+
 public class Main {
 
 	public static void main(String[] args) {
 		
-		MyNetwork<MyData> rete = new MyNetwork<>();
+		/********************************************
+		*	 PRIMA IMPLEMENTAZIONE di Board		*
+		/********************************************/
+		// creo una rete == socialNetwrok
+		MyNetwork<MyData, Board<MyData>> rete = new MyNetwork<>();
 		// TEST 
+		// creo una lista di utenti (che faranno anche da amici)
 		ArrayList<String> users = new ArrayList<>();
 		users.add("Ludovico"); users.add("Pietro"); users.add("Marco"); users.add("Emanuele");
 		
@@ -22,15 +29,20 @@ public class Main {
 		data.add(new MyData("PS5", "Rumor sulla possibilità di cartucce per PS5", categ.get(2)));
 		data.add(new MyData("GoogleStadia", "Che flop epocale", categ.get(2)));
 		
+		// testo inizialmente su una sola bacheca tutti i metodi compiendo sia azioni corrette
+		// che sbagliate: queste ultime sono sempre le ultime in ogni blocco try-catch
+		
+		// successivamente inserisco anche un'altra bahceca
 		try { // password minore di 8 caratteri
-			rete.addUser(users.get(0), "passwordSuperStrong");
-			rete.addUser(users.get(1), "test");
+			
+			rete.addUser(users.get(0), new Board<MyData>("passwordSuperStrong"));
+			rete.addUser(users.get(1), new Board<MyData>("test"));
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		try { // get di una bacheca non presente
-			Board<MyData> tmp = rete.getBoard(users.get(1));
+			rete.getBoard(users.get(1));
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 		}
@@ -43,6 +55,12 @@ public class Main {
 			System.out.println(e.getMessage());
 		} catch (WrongPasswordException e) {
 			System.out.println(e.getMessage());
+		}
+		
+		try { // stringa nulla passata (vale per tutti i metodi)
+			rete.getBoard(users.get(0)).createCategory(null, "passwordSuperStrong");
+		} catch (NullPointerException e) {
+			System.out.println("Uno dei dati inseriti è nullo, operazione fallita");
 		}
 		
 		try { // categoria già presente
@@ -208,8 +226,12 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
 		// creo un'altra bacheca
+		rete.addUser(users.get(1), new Board<MyData>("passwordSuperStrong"));
+		
+		/********************************************
+		*	 SECONDA IMPLEMENTAZIONE di Board		*
+		/********************************************/
 		
 		// qualche operazione sulla seconda implementazione
 	}

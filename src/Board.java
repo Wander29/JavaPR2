@@ -47,13 +47,28 @@ public class Board<E extends Data> implements DataBoard<E> {
 		}
 	}
 	
+	static final int MIN_LENGTH_PSW = 8;
 	private byte[] psw;
 	
 	private HashMap<String, ArrayList<InternalData<E>>> categories;
 	private HashMap<String, ArrayList<String>> friends;
 	
-	// controlli sulla password effettuati dal chiamante
+	// istanzia una bacheca
 	public Board(String psw_plain) {
+		/* @REQUIRES 		psw_plain != null
+		 * 				&&	psw.length() >= MIN_LENGTH_PSW
+		 * @MODIFIES 	this
+		 * @EFFECTS 	crea una nuova bacheca
+		 * @THROWS 		if psw_plain == null
+		 * 					throws NullPointerException
+		 * 				if psw.length() < MIN_LENGTH_PSW
+		 * 					throws IllegalArgumentException
+		 */
+		
+		if (psw_plain == null) throw new NullPointerException();
+		if (psw_plain.length() < MIN_LENGTH_PSW) throw new IllegalArgumentException("La password NON rispetta i requisiti "
+				+ "minimi di lunghezza: almeno " +  MIN_LENGTH_PSW + " caratteri");
+		
 		psw = MyPasswordCrypt.cryptPsw(psw_plain);
 		
 		categories = new HashMap<>(); // inferenza di tipi generici
@@ -232,7 +247,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 		return new LikeSortedDataIterator();
 	}
 	
-	// produce una lista di TUTTI i dati presenti in bacheca
+	// produce una lista di TUTTI i dati di tipo InternalData<E> presenti in bacheca
 	private ArrayList<InternalData<E>> genAllData() {
 		
 		ArrayList<InternalData<E>> v = new ArrayList<InternalData<E>>();
