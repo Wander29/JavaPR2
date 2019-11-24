@@ -9,13 +9,14 @@ public interface DataBoard<E extends Data> {
  * 				É una struttura mutabile, di dimensione finita ma non fissa
  * 				Non sono ammessi dati/amici/categorie duplicati o null
  *  
- *  TYPICAL ELEMENT { 	sets: 		FRIENDS, CATEGORIES, DATA		
+ *  TYPICAL ELEMENT { 	psw, 
+ *  					INSIEMI: 		FRIENDS, CATEGORIES, DATA		
  *  																tc
  *  						for all j in [0, |DATA|). d_j != null && (for all k in (j, |DATA|). d_j != d_k)
  *  						for all j in [0, |FRIENDS|). f_j != null && (for all k in (j, |FRIENDS|). f_j != f_k)
  *  						for all j in [0, |CATEGORIES|). c_j != null && (for all k in (j, |CATEGORIES|). c_j != c_k)
  *  
- *  					functions:
+ *  					FUNZIONI:
  *  						f(FRIEND) 	-> 	{ c0, ..., c_f }  con c0 != ... != c_f != null in CATEGORIES 
  *  						g(DATA) 	-> 	{ c in CATEGORIES, #like, { friend0, f1, ... , f_q } } 
  *  											con  c != null, #like >= 0 && friend0 != f1 != ... != f_q != null
@@ -73,7 +74,7 @@ public interface DataBoard<E extends Data> {
 	 * 				&& 	EXISTS i in CATEGORIES. c_i == category
 	 * 				&& 	category NOT IN f(friend)
 	 *  @MODIFIES	this
-	 *  @EFFECTS		FRIENDS = pre(FRIENDS) U friend 	
+	 *  @EFFECTS	FRIENDS = pre(FRIENDS) U friend 	
 	 *  			&&	se pre( f(friend) ) = { c0, ..., c_w } ==> f(friend) = { c0, ..., c_w } U category	
 	 *  @THROWS 	if category == null || passw == null || friend == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
@@ -117,7 +118,7 @@ public interface DataBoard<E extends Data> {
 	 * 				&&	cat_dato == category
 	 * 				&&  NOT EXISTS j in [0, |DATA|). d_j == dato
 	 *  @MODIFIES	this
-	 *  @EFFECTS	
+	 *  @EFFECTS	post(DATA) = pre(DATA) U dato 	tc	g(dato) == category
 	 *  @THROWS 	if category == null || passw == null || dato == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
 	 *  			if passw != this.psw
