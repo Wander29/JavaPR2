@@ -19,15 +19,22 @@ public class Main {
 		ArrayList<String> categ = new ArrayList<>();
 		categ.add("Gattini"); categ.add("Moto"); categ.add("Videogiochi");
 		
+		// lista di dati [OSS: ogni dato è sottotipo di MyData]
 		ArrayList<MyData> data = new ArrayList<>();
-		data.add(new MyData("Mainecoon", "il mio Mainecoon è inarrivabile", categ.get(0)));
-		data.add(new MyData("Lemure", "Quasi un gatto", categ.get(0)));
-		data.add(new MyData("Dormire", "Gatto che si ribalta mentre dorme", categ.get(0)));
-		data.add(new MyData("Lorenzo si ritira", "Jorge Lorenzo si ritira dalla MotoGP, oh no!", categ.get(1)));
-		data.add(new MyData("nuova Ducati", "La nuova Ducati da strada è ora disponibile sul mercato", categ.get(1)));
-		data.add(new MyData("Kojima", "Death Stranding raggiunge apici mai visti", categ.get(2)));
-		data.add(new MyData("PS5", "Rumor sulla possibilità di cartucce per PS5", categ.get(2)));
-		data.add(new MyData("GoogleStadia", "Che flop epocale", categ.get(2)));
+		data.add(new Testo("Mainecoon", "il mio Mainecoon è inarrivabile", categ.get(0)));
+		data.add(new Testo("Lemure", "Piovono gatti!", categ.get(0)));
+		data.add(new Testo("Dormire", "Pensa, i gatti si ribaltano mentre dormono", categ.get(0)));
+		data.add(new Testo("Lorenzo si ritira", "Jorge Lorenzo si ritira dalla MotoGP, oh no!", categ.get(1)));
+		data.add(new Testo("nuova Ducati", "adrenalina a mille nel provare la nuova Ducati", categ.get(1)));
+		data.add(new Testo("Kojima", "Death Stranding raggiunge apici di coinvolgimento mai visti", categ.get(2)));
+		data.add(new Testo("PS5", "Rumor sulla possibilità di cartucce per PS5", categ.get(2)));
+		data.add(new Testo("Google Stadia", "Che flop epocale", categ.get(2)));
+		
+		data.add(new Audio("Fusa gattini", categ.get(0))); //8
+		data.add(new Audio("Miagolii", categ.get(0))); //9
+		data.add(new Audio("Gatto che chiede scusa", categ.get(0))); //10
+		data.add(new Audio("Accensione Desmosedici", categ.get(1))); //11
+		data.add(new Audio("The Last Of Us OST", categ.get(2))); //12
 		
 		// testo inizialmente su una sola bacheca tutti i metodi compiendo sia azioni corrette
 		// che sbagliate: queste ultime sono sempre le ultime in ogni blocco try-catch
@@ -116,6 +123,10 @@ public class Main {
 		}
 		
 		try { // inserimento di un dato la cui categoria non è presente in bacheca
+			rete.getBoard(users.get(0)).put("passwordSuperStrong", data.get(8), data.get(8).getCategory());
+			rete.getBoard(users.get(0)).put("passwordSuperStrong", data.get(9), data.get(9).getCategory());
+			rete.getBoard(users.get(0)).put("passwordSuperStrong", data.get(10), data.get(10).getCategory());
+			rete.getBoard(users.get(0)).put("passwordSuperStrong", data.get(12), data.get(12).getCategory());
 			rete.getBoard(users.get(0)).put("passwordSuperStrong", data.get(3), data.get(3).getCategory());
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
@@ -197,27 +208,15 @@ public class Main {
 			tmp.display();
 		}
 		
-		System.out.println("\n Dati CONDIVISI CON " + users.get(1));
-		it = rete.getBoard(users.get(0)).getFriendIterator(users.get(1));
-		while(it.hasNext()) {
-			it.next().display();		
-		}
-		
-		System.out.println("\n Dati CONDIVISI CON " + users.get(2));
+		System.out.println("\nDati CONDIVISI CON " + users.get(2));
 		it = rete.getBoard(users.get(0)).getFriendIterator(users.get(2));
-		while(it.hasNext()) {
-			it.next().display();		
-		}
-		
-		System.out.println("\n Dati CONDIVISI CON " + users.get(3));
-		it = rete.getBoard(users.get(0)).getFriendIterator(users.get(3));
 		while(it.hasNext()) {
 			it.next().display();		
 		}
 		
 		try { // elimino una categoria e itero sui dati di tale categoria tramite una amico con cui essa era condivisa
 			rete.getBoard(users.get(0)).removeCategory(categ.get(0), "passwordSuperStrong");
-			System.out.println("\n Dati CONDIVISI CON " + users.get(2));
+			System.out.println("\nDati CONDIVISI CON " + users.get(2));
 			it = rete.getBoard(users.get(0)).getFriendIterator(users.get(2));
 			while(it.hasNext()) {
 				it.next().display();		
@@ -226,6 +225,8 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
+		
 		// creo un'altra bacheca
 		rete.addUser(users.get(1), new Board<MyData>("passwordSuperStrong"));
 		

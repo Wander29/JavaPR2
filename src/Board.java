@@ -155,7 +155,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 			ArrayList<InternalData<E>> tmp = categories.get(data.getCategory());
 			// controlle se dati uguali, confronto fra InternalData<E> ed E
 			for (int i=0; i<tmp.size(); i++)
-				if( tmp.get(i).data.equals(data) ) throw new IllegalArgumentException("DATO già presente: " + data.getDataName());
+				if( tmp.get(i).data.equals(data) ) throw new IllegalArgumentException("DATO già presente: " + data.getDataTitle());
 			
 			categories.get(category).add(new InternalData<E>(data));	
 		}	
@@ -177,7 +177,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 				return tmp.get(i).data;
 			}
 		}	
-		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	
 	public E remove(String psw_plain, E data) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
@@ -193,7 +193,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 			if (tmp.get(i).data.equals(data))
 				return tmp.remove(i).data;
 		}	
-		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	
 	public List<E> getDataCategory(String psw_plain, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
@@ -230,11 +230,11 @@ public class Board<E extends Data> implements DataBoard<E> {
 				if(! tmp.get(i).friendsWhoLiked.contains(friend))
 					tmp.get(i).addLike(friend);
 				else
-					throw new DuplicateLikeException(friend + " ha già messo like al dato " + data.getDataName());
+					throw new DuplicateLikeException(friend + " ha già messo like al dato " + data.getDataTitle());
 				return;
 			}
 		}
-		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	
 	// ITERATORE SU TUTTI I DATI
@@ -372,7 +372,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 				return tmp.get(i).likes;
 			}
 		}	
-		throw new IllegalArgumentException("Dato NON presente: " + data.getDataName());
+		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	
 }

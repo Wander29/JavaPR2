@@ -1,4 +1,4 @@
-public class Audio extends MyData2 {
+public class Audio extends MyData {
 	
 	private String content;
 	
@@ -32,9 +32,9 @@ public class Audio extends MyData2 {
 
 	@Override
 	public void display() {
-		System.out.println("\nTITOLO: " + this.getDataTitle());
+		System.out.println("TITOLO: " + this.getDataTitle());
 		System.out.println("Categoria: " + this.getCategory());
-		System.out.println("Contenuto: " + getContent());
+		System.out.println("Contenuto: " + getContent() + "\n");
 		this.printFrame();
 	}
 
