@@ -228,8 +228,56 @@ public class Main {
 		
 		
 		// creo un'altra bacheca
-		rete.addUser(users.get(1), new Board<MyData>("passwordSuperStrong"));
+		rete.addUser(users.get(1), new Board<MyData>("password01"));
 		
+		try {
+			rete.getBoard(users.get(1)).createCategory(categ.get(0), "password01");
+			rete.getBoard(users.get(1)).createCategory(categ.get(1), "password01");
+			rete.getBoard(users.get(1)).createCategory(categ.get(2), "password01");
+			
+			rete.getBoard(users.get(1)).addFriend(categ.get(0), "password01", users.get(0));
+			rete.getBoard(users.get(1)).addFriend(categ.get(1), "password01", users.get(0));
+			rete.getBoard(users.get(1)).addFriend(categ.get(2), "password01", users.get(0));
+			
+			rete.getBoard(users.get(1)).addFriend(categ.get(1), "password01", users.get(2));
+			rete.getBoard(users.get(1)).addFriend(categ.get(2), "password01", users.get(3));
+			
+			rete.getBoard(users.get(1)).put("password01", data.get(0), data.get(0).getCategory());
+			rete.getBoard(users.get(1)).put("password01", data.get(3), data.get(3).getCategory());
+			rete.getBoard(users.get(1)).put("password01", data.get(6), data.get(6).getCategory());
+			rete.getBoard(users.get(1)).put("password01", data.get(8), data.get(8).getCategory());
+			rete.getBoard(users.get(1)).put("password01", data.get(9), data.get(9).getCategory());
+			rete.getBoard(users.get(1)).put("password01", data.get(11), data.get(11).getCategory());
+			
+			rete.getBoard(users.get(1)).insertLike(users.get(0), data.get(0));
+			rete.getBoard(users.get(1)).insertLike(users.get(0), data.get(11));
+			rete.getBoard(users.get(1)).insertLike(users.get(0), data.get(9));
+			
+			rete.getBoard(users.get(1)).insertLike(users.get(3), data.get(6));
+			rete.getBoard(users.get(1)).insertLike(users.get(2), data.get(11));
+			
+			
+			System.out.println(MyPasswordCrypt.cmpPasswords(MyPasswordCrypt.cryptPsw("password01"), rete.getBoard(users.get(1)).getPsw()));
+			System.out.println("\n\nBACHECA DI " + users.get(1));
+			
+			System.out.println("\nDATI nella bacheca: \n");
+			
+			it = rete.getBoard(users.get(1)).getIterator("password01");
+			while(it.hasNext()) {
+				tmp = it.next();
+				System.out.println("LIKES: " + rete.getBoard(users.get(1)).getNumLikes("password01", tmp));
+				tmp.display();
+			}
+			
+			System.out.println("\nDati CONDIVISI CON " + users.get(2));
+			it = rete.getBoard(users.get(1)).getFriendIterator(users.get(2));
+			while(it.hasNext()) {
+				it.next().display();		
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		/********************************************
 		*	 SECONDA IMPLEMENTAZIONE di Board		*
 		/********************************************/

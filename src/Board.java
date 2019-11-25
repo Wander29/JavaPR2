@@ -13,17 +13,18 @@ public class Board<E extends Data> implements DataBoard<E> {
  * IR()  : 		psw != null
  * 				&& 	categories != null
  * 				&&	friends != null
- * 				&&	for all c IN cateogreis.keySet() ==> c != null && (
- * 						for each remaining j in categories.keySet() ==> c != j )
- * 				&& 	for all v IN categories.values() ==> v != null && v.likes >= 0  && (
- * 						for each remaining j in categories.values() ==> v.data != j.data )
- * 						&& for all f IN v.friendsWhoLiked ==> f!= null && (
- * 							for each remaining z in v.friendsWhoLiked ==> f != z )
- * 				&& 	for all f IN friends. f != null && (
- * 						for each remaining j in friends ==> f != j )
+ * 				&&	for all c IN categories.keySet() ==> c != null 
+ * 					{ &&  (for each remaining j in categories.keySet() ==> c != j ) } -> garantito da HashMap
+ * 				&& 	for all a IN categories.values() ==> a != null 
+ * 					&& for all v IN a. 
+ * 							v.likes >= 0  
+ * 						&& ( for each remaining j in a ==> v.data != j.data )
+ * 						&& for all f IN v.friendsWhoLiked ==> f!= null 
+ * 							&& (for each remaining z in v.friendsWhoLiked ==> f != z )
+ * 				&& 	for all f IN friends.keySet() ==> f != null 
+ *  				{ && (for each remaining j in friends ==> f != j ) } -> garantito da HashMap
  * 				&&	for all c IN friends.values() ==> c != null && (
  * 						for each remaining j in friends.values() ==> c != j )
- * 
  */
 	
 	private class InternalData<T extends Data>{
@@ -373,6 +374,10 @@ public class Board<E extends Data> implements DataBoard<E> {
 			}
 		}	
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
+	}
+	
+	public byte[] getPsw() {
+		return this.psw;
 	}
 	
 }
