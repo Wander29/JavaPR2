@@ -36,7 +36,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		InternalData (T data) {
 			this.data = data;
-			friendsWhoLiked = new TreeSet<>();
+			friendsWhoLiked = new TreeSet<String>();
 			likes = 0;
 		}
 		
@@ -46,6 +46,10 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		// @EFFECTS 	post(friendsWhoLiked) = pre(friendsWhoLiked) U f 	if f != null
 			friendsWhoLiked.add(f);
 			likes++;
+		}
+		
+		public boolean equals(InternalData<T> b) {
+			return (this.data.equals(b.data) && this.likes == b.likes);
 		}
 	}
 	
@@ -85,7 +89,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(categories.containsKey(category)) throw new IllegalArgumentException("Categoria già presente");
 		
-		categories.put(category, new TreeSet<>());
+		categories.put(category, new TreeSet<>(new MyComparator()));
 	}
 	
 	public void removeCategory(String category, String 	psw_plain) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
@@ -151,14 +155,13 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
 		if(categories.get(category) == null) {
-			categories.put(category, new TreeSet<>());
+			categories.put(category, new TreeSet<>(new MyComparator()));
 			categories.get(category).add(new InternalData<E>(data));
-		} else {
-			TreeSet<InternalData<E>> tmp = categories.get(data.getCategory());
+		} else { // Anche se TreeSet non ammette elementi duplicati devo vedere se esiste il dato negli InternalData
 			// controlle se dati uguali, confronto fra InternalData<E> ed E
-			for (int i=0; i<tmp.size(); i++)
-				if( tmp.get(i).data.equals(data) ) throw new IllegalArgumentException("DATO già presente: " + data.getDataTitle());
-			
+			for(InternalData<E> el : categories.get(data.getCategory()))
+				if( el.data.equals(data) ) throw new IllegalArgumentException("DATO già presente: " + data.getDataTitle());
+				
 			categories.get(category).add(new InternalData<E>(data));	
 		}	
 		
@@ -173,11 +176,9 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
 		
-		TreeSet<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<tmp.size(); i++) {
-			if (tmp.get(i).data.equals(data)) {
-				return tmp.get(i).data;
-			}
+		for(InternalData<E> el : categories.get(data.getCategory())) {
+			if (el.data.equals(data)) 
+				return el.data;
 		}	
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
@@ -190,11 +191,16 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
 		
-		TreeSet<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<tmp.size(); i++) {
-			if (tmp.get(i).data.equals(data))
-				return tmp.remove(i).data;
-		}	
+		Iterator<InternalData<E>> it = categories.get(data.getCategory()).iterator();
+		InternalData<E> tmp;
+		while(it.hasNext()) {
+			tmp= it.next();
+			if (tmp.data.equals(data)) {
+				it.remove();
+				return tmp.data;
+			}
+				
+		}
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	
@@ -206,7 +212,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
-		ArrayList<E> a = new TreeSet<>();
+		ArrayList<E> a = new ArrayList<>();
 		for(InternalData<E> tmp : categories.get(category)) {
 			a.add(tmp.data);
 		}
@@ -226,11 +232,10 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		if(! friends.get(friend).contains(data.getCategory()) ) 
 			throw new HiddenCategoryException(friend + " non ha accesso alla categoria " + data.getCategory());
 		
-		TreeSet<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<tmp.size(); i++) {
-			if (tmp.get(i).data.equals(data)) {
-				if(! tmp.get(i).friendsWhoLiked.contains(friend))
-					tmp.get(i).addLike(friend);
+		for(InternalData<E> el : categories.get(data.getCategory())) {
+			if (el.data.equals(data)) {
+				if(! el.friendsWhoLiked.contains(friend))
+					el.addLike(friend);
 				else
 					throw new DuplicateLikeException(friend + " ha già messo like al dato " + data.getDataTitle());
 				return;
@@ -252,7 +257,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 	// produce una lista di TUTTI i dati di tipo InternalData<E> presenti in bacheca
 	private TreeSet<InternalData<E>> genAllData() {
 		
-		TreeSet<InternalData<E>> v = new TreeSet<InternalData<E>>();
+		TreeSet<InternalData<E>> v = new TreeSet<InternalData<E>>(new MyComparator());
 		
 		for(TreeSet<InternalData<E>> tmp : categories.values()) {
 			v.addAll(tmp);
@@ -265,25 +270,26 @@ public class Board2<E extends Data> implements DataBoard<E> {
 	private class MyComparator implements Comparator<InternalData<E>> {
 		@Override
 		public int compare(InternalData<E> arg0, InternalData<E> arg1) {
-			return arg1.likes - arg0.likes;	// decrescente
+			if (arg1.likes - arg0.likes == 0) {
+				return arg0.data.getDataTitle().compareTo(arg1.data.getDataTitle());
+			} else
+				return arg1.likes - arg0.likes;	// decrescente
 		}
 	}
 	
 	// classe privata che genera iteratori di istanza per l'iteratore su tutti i dati
 	private class LikeSortedDataIterator implements Iterator<E> {
 
-		int ind;
+		E tmp;
 		TreeSet<InternalData<E>> a;
 		
 		public LikeSortedDataIterator() {
-			ind = 0;
 			a = genAllData();
-			Collections.sort(a, new MyComparator());
 		}
 		
 		@Override	
 		public boolean hasNext() {
-			if (ind >= a.size() || a.get(ind) == null)
+			if (a.size() <1  || a.first() == null)
 				return false;
 			return true;
 		}
@@ -292,7 +298,9 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		public E next() {
 			if (! hasNext())
 				return null;
-			return a.get(ind++).data; 
+			tmp = a.first().data;
+			a.remove(a.first());
+			return tmp; 
 		}
 		
 		public void remove() { 
@@ -315,10 +323,10 @@ public class Board2<E extends Data> implements DataBoard<E> {
 	private class FriendIterator implements Iterator<E> {
 		
 		int ind;
-		TreeSet<InternalData<E>> a;
+		ArrayList<InternalData<E>> a;
 		
 		public FriendIterator(String f) {
-			a = new TreeSet<>();
+			a = new ArrayList<>();
 			
 			for (String s : friends.get(f)) {
 				a.addAll(categories.get(s));
@@ -368,12 +376,11 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(data.getCategory())) throw new IllegalArgumentException("Categoria del dato NON valida");	
 		
-		TreeSet<InternalData<E>> tmp = categories.get(data.getCategory());
-		for (int i=0; i<tmp.size(); i++) {
-			if (tmp.get(i).data.equals(data)) {
-				return tmp.get(i).likes;
-			}
-		}	
+		for(InternalData<E> el : categories.get(data.getCategory())) {
+			if (el.data.equals(data)) 
+				return el.likes;
+		}
+		
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
 	

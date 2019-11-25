@@ -56,6 +56,7 @@ public interface DataBoard<E extends Data> {
 	 *  @EFFECTS	CATEGORIES = pre(CATEGORIES) \ category &&
 	 *  			for all f in FRIENDS tc category IN f(f)
 	 *  				post( f(f) ) = f(f) \ category
+	 *  			DATA = DATA \ { d_i  tc  d_i IN h(category) }
 	 *  @THROWS 	if category == null || passw == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
 	 *  			if passw != this.psw

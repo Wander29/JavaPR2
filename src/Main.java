@@ -282,6 +282,51 @@ public class Main {
 		*	 SECONDA IMPLEMENTAZIONE di Board		*
 		/********************************************/
 		
+		System.out.println("\n### BOARD2 ###\n\n");
+		MyNetwork<MyData, Board2<MyData>> rete2 = new MyNetwork<>();
+		
+		try {
+			rete2.addUser(users.get(0), new Board2<MyData>("WonderfulCats"));
+			rete2.getBoard(users.get(0)).createCategory(categ.get(0), "WonderfulCats");
+			rete2.getBoard(users.get(0)).createCategory(categ.get(1), "WonderfulCats");
+			List<MyData> a;
+			
+			rete2.getBoard(users.get(0)).put("WonderfulCats", data.get(0), data.get(0).getCategory());
+			rete2.getBoard(users.get(0)).put("WonderfulCats", data.get(1), data.get(1).getCategory());
+			rete2.getBoard(users.get(0)).put("WonderfulCats", data.get(8), data.get(8).getCategory());
+			rete2.getBoard(users.get(0)).put("WonderfulCats", data.get(9), data.get(9).getCategory());
+			rete2.getBoard(users.get(0)).put("WonderfulCats", data.get(11), data.get(11).getCategory());
+			
+			rete2.getBoard(users.get(0)).addFriend(categ.get(0), "WonderfulCats", users.get(1));
+			rete2.getBoard(users.get(0)).addFriend(categ.get(1), "WonderfulCats", users.get(1));
+			rete2.getBoard(users.get(0)).addFriend(categ.get(0), "WonderfulCats", users.get(2));
+			
+			rete2.getBoard(users.get(0)).insertLike(users.get(1), data.get(0));
+			rete2.getBoard(users.get(0)).insertLike(users.get(1), data.get(1));
+			rete2.getBoard(users.get(0)).insertLike(users.get(1), data.get(8));
+			rete2.getBoard(users.get(0)).insertLike(users.get(2), data.get(8));
+			
+		
+			System.out.println("\n\nBACHECA DI " + users.get(0));
+			
+			System.out.println("\nDati CONDIVISI CON " + users.get(1));
+			it = rete2.getBoard(users.get(0)).getFriendIterator(users.get(1));
+			while(it.hasNext()) {
+				it.next().display();		
+			}
+			
+			System.out.println("\nDATI nella bacheca: \n");
+			
+			it = rete2.getBoard(users.get(0)).getIterator("WonderfulCats");
+			while(it.hasNext()) {
+				tmp = it.next();
+				System.out.println("LIKES: " + rete2.getBoard(users.get(0)).getNumLikes("WonderfulCats", tmp));
+				tmp.display();
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		// qualche operazione sulla seconda implementazione
 	}
 }
