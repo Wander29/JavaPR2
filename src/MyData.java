@@ -1,11 +1,10 @@
 public abstract class MyData implements Data {
-	/* 	OVERVIEW 		Data rappresenta un dato sottoforma di un insieme di 3 attributi e alcune operazioni
+	/* 	OVERVIEW 		Data rappresenta un dato astratto sottoforma di un insieme di 2 attributi e alcune operazioni
 	 * 					È una struttura astratta immutable, di dimensione finita e fissa
 	 * 
-	 * TYPICAL ELEMENT 	{ dataName, content, category }
-	 * 				tc
-	 * 					dataName 	!= null
-	 * 				&&	content 	!= null
+	 * AF() 		{ <dataTitle, category> }\
+	 * 
+	 * IR() 			dataName 	!= null
 	 * 				&&	cateogry 	!= null
 	 */
 	

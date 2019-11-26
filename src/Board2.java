@@ -42,10 +42,14 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		// aggiunge un like al contatore ed inserisce f nella lista degli amici che hanno messo like
 		// TreeSet garantisce che elementi duplicati o null non vengano inseriti
-		void addLike(String f) { 
+		boolean addLike(String f) { 
 		// @EFFECTS 	post(friendsWhoLiked) = pre(friendsWhoLiked) U f 	if f != null
-			friendsWhoLiked.add(f);
-			likes++;
+			if (friendsWhoLiked.add(f)) {
+				likes++;
+				return true;
+			}
+			return false;
+			
 		}
 		
 		public boolean equals(InternalData<T> b) {
@@ -121,9 +125,8 @@ public class Board2<E extends Data> implements DataBoard<E> {
 			friends.get(friend).add(category);
 		}
 		else {
-			if(friends.get(friend).contains(category)) throw new IllegalArgumentException(friend + " ha già accesso a " + category);
-			else
-				friends.get(friend).add(category);	
+			if (! friends.get(friend).add(category))
+				throw new IllegalArgumentException(friend + " ha già accesso a " + category);
 		}
 	}
 	
@@ -234,9 +237,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		for(InternalData<E> el : categories.get(data.getCategory())) {
 			if (el.data.equals(data)) {
-				if(! el.friendsWhoLiked.contains(friend))
-					el.addLike(friend);
-				else
+				if (! el.addLike(friend))
 					throw new DuplicateLikeException(friend + " ha già messo like al dato " + data.getDataTitle());
 				return;
 			}

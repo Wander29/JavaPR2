@@ -9,7 +9,7 @@
 \hypersetup{
     colorlinks=true,
     filecolor=magenta,      
-    urlcolor=blue,
+    urlcolor=darkgray,
     linkcolor=black
 }
 \urlstyle{same}
@@ -47,55 +47,67 @@
 \section{Scelte progettuali}
 Nella relazione verranno spiegate le scelte progettuali e implementative che sono state prese.
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.4]{diag1}
+	\label{fig:diag1}
+	\caption{Struttura generale del progetto comune ad entrambe le implemntazioni}
+\end{figure}
+
 \subsection{Data}
+A grandi linee è stata creata una struttura generale dei dati in grado di adattarsi a varie situazioni.\\ \textit{Data} viene implementata come \textit{interfaccia}: stabilisce un \textit{contratto} con le sottoclassi che la implementeranno, ovvero: 
 \begin{center}
-OVERVIEW: \textit{Data rappresenta un dato sottoforma di un insieme di 3 attributi e alcune operazioni. È una struttura astratta immutable, di dimensione finita e fissa.}
+OVERVIEW: \textit{Data rappresenta un dato astratto sottoforma di un insieme di 2 attributi e alcune operazioni. È una struttura astratta immutable, di dimensione finita e fissa}
 \end{center}
-\textit{Data} viene implementata come classe astratta.
-Tale scelta deriva dalla volontà di attribuire a tutte le classi che discendono da \textit{Data} delle caratteristiche comuni, ovvero dei metodi già implementati e una struttura implementativa di base:
+Stabilisce delle caratteristiche comuni a tutte le sottoclassi: metodi che dovranno necessariamente implementare: 
+\begin{center}
+\textit{public void \textbf{display}();\\public String \textbf{getDataTitle}();\\public 		String \textbf{getCategory}();}
+\end{center}
+\subsubsection{MyData}
+Viene poi implementata una sottoclasse \textit{astratta \textbf{MyData}} per soddisfare l'obiettivo iniziale di progettare una struttura versatile.\\
+\textit{MyData} è implementata come classe astratta e tale scelta deriva dalla volontà di attribuire a tutte le classi che discendono da \textit{MyData} delle altre caratteristiche comuni, più \textit{concrete}, ovvero dei metodi già implementati e una struttura implementativa di base:
 \begin{center}
 	\textit{private String \textbf{dataName};\\
-	private String \textbf{content};\\
 	private String \textbf{category};\\}
 \end{center}
-Come da specifica la classe \textit{Data} riporta anche il metodo astratto display che verrà implementato dalle sottoclassi:
-\begin{center}
-	\textit{public abstract void display();}
-\end{center}
-\textit{Data} ridefinisce anche \textit{equals()} per permettere la deep equality e mette a disposizione dei getter per accedere ai dati privati in lettura.\\
-Rappresenta un \textit{contratto} cui tutte le sottoclassi (= i vari dati) dovranno sottostare, ovvero condivideranno con \textit{Data} la struttura di base, i vari metodi non astratti e dovranno ridefinire il metodo \textit{display()}.
+Come da specifica la classe \textit{MyData} riporta anche il metodo display , ma astratto: verrà implementato dalle sottoclassi.
+Da \textit{MyData} discendono i dati veri e propri che saranno salvati in Bacheca: nell'esempio per il progetto sono \textit{Testo} e \textit{Audio}, che:
+\begin{itemize}
+	\item ridefiniscono \textit{equals()} per permettere la deep equality
+	\item aggiungono un contenuto
+	\item implementano display()
+\end{itemize}
+
 \subsubsection{Ipotesi}
 \begin{itemize}
- \item Non ci sono setter poichè si è ipotizzato che \textit{Data} fosse una struttura \textit{immutable}.
+	\item La bacheca risulta una collezione di oggetti di vario tipo, come riportato nel testo, ma ciò non è collegato ad «E extends Data». Si è pertanto deciso di riportare anche la classe (magari apparentemente superflua) \textit{MyData} in modo da far trasparire chiaramente la presa di coscienza di ciò. La bacheca gestisce dati di tipo E : pertanto ogni dato sottotipo di E, con E definito come «E extends Data», è un dato valido da inserire in una bacheca basata sul tipo E.
+	\item Non ci sono setter poichè si è ipotizzato che \textit{Data} fosse una struttura \textit{immutable}.
  \end{itemize}
  
 \begin{footnotesize}
 (Nel testo viene riportato «\textit{i dati possono essere
 visualizzati dagli amici ma modificati solamente dal proprietario della bacheca}»: ciò è stato interpretato come: "la modifica consiste nell'aggiunta o la rimozione dei dati, non nella  modifica effettiva del contenuto dei dati").
 \end{footnotesize}
-\subsubsection{MyData}
-\textit{MyData} è una sottoclasse di \textit{Data}. Implementa il metodo display{} senza aggiungere altro alla struttura della sopraclasse.
-\clearpage
-\subsection{Board «E extends Data» }
+\bigskip
+\subsection{Board«E extends Data» }
+
+\textit{Board} rappresenta un contenitore di oggetti generici. È basata sul tipo generico «E extends Data» e funzionalmente è una collezione di dati che possono essere di vario tipo, a patto che siano sottotipi di E (che estende \textit{Data}).
+
+Non ho riportato la specifica di ogni metodo nel codice di \textit{Board(2)«E extends Data»} poichè risultava troppo confusionario; l'implementazione ha comunque seguito di pari passo la specifica riportata nell'interfaccia \textit{DataBoard«E extends Data»}.
 \subsubsection{Ipotesi}
 \begin{itemize}
 \item Non sono ammessi elementi \textit{null}
 \item Non sono ammessi duplicati di alcun genere
 \item il numero di likes non dipende solamente dal dato ma anche dalla bacheca in cui si trova $\Rightarrow$ \textit{Data} non possiede il contatore dei like: questo si trova nella bacheca, relativamente ad ogni dato
 \item la lista ritornata da \textit{getDataCategory} è in sola lettura, avendo precedentemente ipotizzato che Data sia immutable
+\item la rimozione di una categoria comporta la perdita dei dati in quella categoria e l'associazione per ogni amico di quella categoria
+\item i likes sono univoci per ogni amico
+\paragraph{Nota sugli Iteratori} daie
 \end{itemize}
 
 \subsubsection{Implementazione 1}
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.4]{diag1}
-	\label{fig:diag1}
-	\caption{Struttura generale del progetto con la prima implementazione di Board}
-\end{figure}
 
-Non ho riportato la specifica di ogni metodo nel codice di \textit{Board«E extends Data»} poichè risultava troppo confusionario; l'implementazione ha comunque seguito di pari passo la specifica riportata nell'interfaccia \textit{DataBoard«E extends Data»}.
-
-\subsection{Implementazione 2: Board «E extends Data» }
+\subsubsection{Implementazione 2}
 
 
 

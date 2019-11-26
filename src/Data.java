@@ -1,11 +1,10 @@
 public interface Data {
-/* 	OVERVIEW 		Data rappresenta un dato sottoforma di un insieme di 3 attributi e alcune operazioni
+/* 	OVERVIEW 		Data rappresenta un dato astratto sottoforma di un insieme di 2 attributi e alcune operazioni
  * 					È una struttura astratta immutable, di dimensione finita e fissa
  * 
- * TYPICAL ELEMENT 	{ dataName, content, category }
+ * TYPICAL ELEMENT 	< dataTitle, category >
  * 				tc
- * 					dataName 	!= null
- * 				&&	content 	!= null
+ * 					dataTitle	!= null
  * 				&&	cateogry 	!= null
  */
 	
