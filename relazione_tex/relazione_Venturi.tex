@@ -71,7 +71,7 @@ Viene poi implementata una sottoclasse \textit{astratta \texttt{MyData}} per sod
 	\texttt{private String \emph{dataName};\\
 	private String \emph{category};\\}
 \end{center}
-Come da specifica la classe \texttt{MyData} riporta anche il metodo display , ma astratto: verrà implementato dalle sottoclassi.
+Come da specifica la classe \texttt{MyData} riporta anche il metodo display, ma astratto: verrà implementato dalle sottoclassi.
 Da \texttt{MyData} discendono i dati veri e propri che saranno salvati in bacheca: nell'esempio per il progetto sono \texttt{Testo} e \texttt{Audio}, che:
 \begin{itemize}
 	\item ridefiniscono \texttt{equals()} per permettere la deep equality
@@ -122,6 +122,8 @@ che implementa i metodi \texttt{hasNext()} e \texttt{next()} e che gestisce al s
 \item nel caso di \texttt{getFriendIterator} vengono salvati su una struttura di supporto tutti i dati delle categorie condivise con quell'amico
 \item nel caso di \texttt{getIterator} vengono salvati su una struttura di supporto \textit{tutti} i dati in bacheca, dispendioso, ma necessario per poter applicare un ordinamento crescente in base ai like (data la struttura in cui sono memorizzati normalmente). Per gestire questo iteratore è stata creata una nuova classe interna \texttt{private class \emph{LikeSortedDataIterator} implements Iterator«E»}.
 \end{itemize}
+\paragraph{Gestione delle Password} Si è scelto di salvare le password tramite \texttt{hash} in array di \texttt{byte}\footnote{https://www.baeldung.com/java-password-hashing}, il tutto è gestito nella classe \texttt{public final class \emph{MyPasswordCrypt}}.
+\paragraph{Eccezioni} Sono stati documentati tutti i sollevamenti delle \texttt{eccezioni}. In più sono state definiti 3 nuovi tipi di eccezione: \texttt{DuplicateLikeException, HiddenCategoryException, WrongPasswordException} tutte sottoclassi di \texttt{RuntimeException} e quindi \textbf{unchecked}.
 \subsubsection{Implementazione 1}
 Per la prima implementazione di \texttt{Board} è stata scelta la seguente struttura: 
 \begin{center}
@@ -151,8 +153,6 @@ Per \texttt{HashMap} valgono le stesse considerazioni dell'implementazione 1.\\
 \texttt{TreeSet} è stato scelto per le sue proprietà molto interessanti: non ammette \texttt{null}, non ammette duplicati e salva i dati in ordine crescente. Nonostante questo sono stati comunque effettuati alcuni controlli sui parametri poiché necessari per altre operazione che non riguardavano un \texttt{TreeSet}.
 Da notare che per far sì che il \texttt{TreeSet} comparasse a dovere il tipo \texttt{InternalData«E»} è stato definito un comparatore interno alla classe \texttt{Board}. Nell'iteratore invocato in \texttt{getIterator()} l'utilizzo del TreeSet ha permesso di evitare l'ordinamento di tutti i dati.
 Per scorrere ogni \texttt{TreeSet} si è abbondantemente fatto uso degli \texttt{iteratori}.
-\paragraph{Gestione delle Password} Si è scelto di salvare le password tramite \texttt{hash} in array di \texttt{byte}\footnote{https://www.baeldung.com/java-password-hashing}, il tutto è gestito nella classe \texttt{public final class \emph{MyPasswordCrypt}}.
-\paragraph{Eccezioni} Sono stati documentati tutti i sollevamenti delle \texttt{eccezioni}. In più sono state definite 3 nuovi tipi di eccezione: \texttt{DuplicateLikeException, HiddenCategoryException, WrongPasswordException} tutte sottoclasse di \texttt{RuntimeException} e quindi \textbf{unchecked}.
 \section{Eseguire il codice}
 Eseguendo il \texttt{main} si può testare la struttura già presente che testa tutte le funzionalità.
 È riportata la prima implementazione di \texttt{Board}, per testare la seconda è sufficiente \textsl{fare un find and replace di \texttt{" Board"} con \texttt{" Board2"} (spazi compresi)}.

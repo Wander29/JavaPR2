@@ -7,9 +7,9 @@
 \contentsline {subsection}{\numberline {1.2}Board«E extends Data» }{2}{subsection.1.2}% 
 \contentsline {subsubsection}{\numberline {1.2.1}Ipotesi}{2}{subsubsection.1.2.1}% 
 \contentsline {paragraph}{Nota sugli Iteratori}{2}{section*.2}% 
-\contentsline {subsubsection}{\numberline {1.2.2}Implementazione 1}{3}{subsubsection.1.2.2}% 
-\contentsline {subsubsection}{\numberline {1.2.3}Implementazione 2}{3}{subsubsection.1.2.3}% 
 \contentsline {paragraph}{Gestione delle Password}{3}{section*.3}% 
 \contentsline {paragraph}{Eccezioni}{3}{section*.4}% 
+\contentsline {subsubsection}{\numberline {1.2.2}Implementazione 1}{3}{subsubsection.1.2.2}% 
+\contentsline {subsubsection}{\numberline {1.2.3}Implementazione 2}{3}{subsubsection.1.2.3}% 
 \contentsline {section}{\numberline {2}Eseguire il codice}{4}{section.2}% 
 \contentsline {subsection}{\numberline {2.1}Test ed esempi}{4}{subsection.2.1}% 

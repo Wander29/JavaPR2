@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Arch Linux) (preloaded format=pdflatex 2019.11.23)  26 NOV 2019 18:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Arch Linux) (preloaded format=pdflatex 2019.11.23)  26 NOV 2019 19:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -427,8 +427,8 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 
  <./images/diag1.jpg>]
 [2]
-Overfull \hbox (47.44554pt too wide) in paragraph at lines 155--156
-\OT1/cmr/m/n/10 sta-te de-fi-ni-te 3 nuo-vi ti-pi di ec-ce-zio-ne: \OT1/cmtt/m/
+Overfull \hbox (45.77888pt too wide) in paragraph at lines 126--127
+\OT1/cmr/m/n/10 sta-te de-fi-ni-ti 3 nuo-vi ti-pi di ec-ce-zio-ne: \OT1/cmtt/m/
 n/10 DuplicateLikeException, HiddenCategoryException,
  []
 
@@ -464,7 +464,7 @@ texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 ti8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on relazione_Venturi.pdf (5 pages, 335693 bytes).
+Output written on relazione_Venturi.pdf (5 pages, 335698 bytes).
 PDF statistics:
  193 PDF objects out of 1000 (max. 8388607)
  164 compressed objects within 2 object streams
