@@ -7,14 +7,14 @@ public class Main {
 	public static void main(String[] args) {
 		
 		//per utilizzare l'altra Implementazione 
-			// fare un find & replace di " Board" con " Board2" (spazi compresi)
+			// fare un find & replace di " Board2" con " Board22" (spazi compresi)
 		
 		/********************************************
-		*	 SCEGLIERE L' IMPLEMENTAZIONE di Board			
+		*	 SCEGLIERE L' IMPLEMENTAZIONE di Board2			
 		/********************************************/
 		
 		// creo una rete == socialNetwrok
-		MyNetwork<MyData, Board<MyData>> rete = new MyNetwork<>();
+		MyNetwork<MyData, Board2<MyData>> rete = new MyNetwork<>();
 		
 		// TEST 
 		// creo una lista di utenti (che userò anche come amici)
@@ -28,14 +28,14 @@ public class Main {
 		System.out.println("1) password minore di 8 caratteri: ");
 		try { 
 			
-			rete.addUser(users.get(0), new Board<MyData>("passwordSuperStrong"));
-			rete.addUser(users.get(1), new Board<MyData>("test"));
+			rete.addUser(users.get(0), new Board2<MyData>("passwordSuperStrong"));
+			rete.addUser(users.get(1), new Board2<MyData>("test"));
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		// creo un'altra bacheca
-		rete.addUser(users.get(1), new Board<MyData>("password01"));
+		rete.addUser(users.get(1), new Board2<MyData>("password01"));
 		
 		// lista di dati [OSS: ogni dato è sottotipo di MyData]
 		ArrayList<MyData> data = new ArrayList<>();
@@ -241,7 +241,7 @@ public class Main {
 			it.next().display();		
 		}
 		
-		System.out.println("\n->elimino una categoria e itero sui dati di tale categoria tramite una amico con cui essa era condivisa: ");
+		System.out.println("\n->elimino una categoria e itero sui dati di tale categoria tramite un amico con cui essa era condivisa: ");
 		try { 
 			rete.getBoard(users.get(0)).removeCategory(categ.get(0), "passwordSuperStrong");
 			

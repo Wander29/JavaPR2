@@ -120,12 +120,11 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! categories.containsKey(category))  throw new IllegalArgumentException("Categoria NON presente");	
 		
-		if(! friends.containsKey(friend)) {
+		if(! friends.containsKey(friend))
 			friends.put(friend, new TreeSet<>());
 			
 		if (! friends.get(friend).add(category))
 			throw new IllegalArgumentException(friend + " ha già accesso a " + category);
-		}
 	}
 	
 	public void removeFriend(String category, String psw_plain, String friend) throws HiddenCategoryException, NullPointerException, WrongPasswordException, IllegalArgumentException {
