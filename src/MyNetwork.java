@@ -12,7 +12,7 @@ public class MyNetwork<E extends Data, T extends DataBoard<E>> {
 	}
 	
 	public boolean addUser(String nome, T board) throws NullPointerException, IllegalArgumentException {
-		/* @REQUIRES 		nome != null && board != null && ! users.containsKey(nome)
+		/* @REQUIRES 	nome != null && board != null && ! users.containsKey(nome)
 		 * @MODIFIES 	this
 		 * @EFFECTS 	associa una bacheca ad un nome
 		 * @THROWS 		if nome == null || board == null

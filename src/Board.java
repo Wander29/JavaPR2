@@ -210,7 +210,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 			a.add(tmp.data);
 		}
 		
-		return Collections.unmodifiableList(a);
+		return Collections.unmodifiableList(a); // ridondante poiché i dati sono immutabili
 		
 	}
 	
@@ -317,6 +317,7 @@ public class Board<E extends Data> implements DataBoard<E> {
 		ArrayList<InternalData<E>> a;
 		
 		public FriendIterator(String f) {
+			ind = 0;
 			a = new ArrayList<>();
 			
 			for (String s : friends.get(f)) {
@@ -375,9 +376,4 @@ public class Board<E extends Data> implements DataBoard<E> {
 		}	
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
-	
-	public byte[] getPsw() {
-		return this.psw;
-	}
-	
 }

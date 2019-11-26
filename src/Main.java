@@ -10,7 +10,7 @@ public class Main {
 			// fare un find & replace di " Board" con " Board2" (spazi compresi)
 		
 		/********************************************
-		*	 PRIMA IMPLEMENTAZIONE di Board			
+		*	 SCEGLIERE L' IMPLEMENTAZIONE di Board			
 		/********************************************/
 		
 		// creo una rete == socialNetwrok
@@ -82,7 +82,7 @@ public class Main {
 			System.out.println("Uno dei dati inseriti è nullo, operazione fallita");
 		}
 		
-		System.out.println("\n5) categoria già presente: ");
+		System.out.println("\n5) aggiunta di una categoria già presente: ");
 		try {
 			rete.getBoard(users.get(0)).createCategory(categ.get(0), "passwordSuperStrong");
 		} catch (IllegalArgumentException e) {

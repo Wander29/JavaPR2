@@ -122,11 +122,9 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! friends.containsKey(friend)) {
 			friends.put(friend, new TreeSet<>());
-			friends.get(friend).add(category);
-		}
-		else {
-			if (! friends.get(friend).add(category))
-				throw new IllegalArgumentException(friend + " ha già accesso a " + category);
+			
+		if (! friends.get(friend).add(category))
+			throw new IllegalArgumentException(friend + " ha già accesso a " + category);
 		}
 	}
 	
@@ -140,9 +138,8 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		if(! friends.containsKey(friend)) throw new IllegalArgumentException(friend + " NON è un amico valido");	
 		
-		if(! friends.get(friend).contains(category)) throw new HiddenCategoryException("Categoria NON condivisa con " + friend);
+		if(! friends.get(friend).remove(category)) throw new HiddenCategoryException("Categoria NON condivisa con " + friend);
 		
-		friends.get(friend).remove(category);
 	}
 	
 	public boolean put(String psw_plain, E data, String category) throws NullPointerException, WrongPasswordException, IllegalArgumentException {
@@ -220,8 +217,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 			a.add(tmp.data);
 		}
 		
-		return Collections.unmodifiableList(a);
-		
+		return Collections.unmodifiableList(a); // ridondante poiché i dati sono immutabili
 	}
 	
 	public void insertLike(String friend, E data) throws DuplicateLikeException, HiddenCategoryException, NullPointerException, IllegalArgumentException {
@@ -327,6 +323,7 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		ArrayList<InternalData<E>> a;
 		
 		public FriendIterator(String f) {
+			ind = 0;
 			a = new ArrayList<>();
 			
 			for (String s : friends.get(f)) {
@@ -384,9 +381,4 @@ public class Board2<E extends Data> implements DataBoard<E> {
 		
 		throw new IllegalArgumentException("Dato NON presente: " + data.getDataTitle());
 	}
-	
-	public byte[] getPsw() {
-		return this.psw;
-	}
-	
 }

@@ -2,10 +2,10 @@ import java.util.*;
 
 public interface DataBoard<E extends Data> {
 /* 	OVERVIEW 	Rappresenta un contenitore di oggetti generici che estendono il tipo di dato Data. 
- * 				Permette di memorizzare dati e visualizzarli
+ * 				Permette di memorizzare dati, di vario tipo a patto che estendao E, e visualizzarli
  * 				Ogni dato ha associata la propria categoria
  * 				Ogni bacheca ha associata una password, e una lista di amici ognuno dei quali ha associato 1 o + categorie 
- * 				Per ogni amico associa anche una lista di categorie di dati da condividere con esso
+ * 				Per ogni amico associa una lista di categorie di dati da condividere con esso
  * 				É una struttura mutabile, di dimensione finita ma non fissa
  * 				Non sono ammessi dati/amici/categorie duplicati o null
  *  
@@ -96,8 +96,8 @@ public interface DataBoard<E extends Data> {
 	 * 				&&  EXISTS j in FRIENDS . f_j == friend
 	 * 				&& 	category IN f(friend)
 	 *  @MODIFIES	this
-	 *  @EFFECTS		FRIENDS = pre(FRIENDS) \ friend 	
-	 *  			&&	se pre( f(friend) ) = { c0, ..., cateogry, ..., c_w } ==> f(friend) = { c0, ..., c_w }	
+	 *  @EFFECTS	se pre( f(friend) ) = { c0, ..., cateogry, ..., c_w } ==> post( f(friend) ) = { c0, ..., c_w }	
+	 *  			&& se |post( f(friend) )| =0 ==> FRIENDS = FRIENDS \ friend
 	 *  @THROWS 	if category == null || passw == null || friend == null
 	 *  				throws NullPointerException (disp. in Java, unchecked)
 	 *  			if passw != this.psw
@@ -211,7 +211,7 @@ public interface DataBoard<E extends Data> {
 	 * 				&& 	passw  != null 
 	 * 				&& 	passw == this.psw 
 	 *  @MODIFIES	//
-	 *  @EFFECTS	resitutisce un iteratore con tutti i dati ordinati in modo tc
+	 *  @EFFECTS	resitutisce un iteratore con tutti i dati ordinati in modo crescente in base ai like ricevuti, ovvero:
 	 *  				d_0, d_1, ... , d_q		con		#likes(d_0) > #likes(d_1) > ... > #likes(d_q)
 	 *  @THROWS 	if this viene modificato durante l'iterazione
 	 *  				throws ConcurrentModificationException
@@ -230,8 +230,8 @@ public interface DataBoard<E extends Data> {
 	 *  @MODIFIES	//
 	 *  @EFFECTS	resitutisce un iteratore con tutti i dati della bacheca condivisi con friend, 
 	 *  			ovvero restituisce tutti i dati presenti nelle categorie condivise con friend : 
-	 *  			f(FRIEND)	= { c0, ..., c_f } in CATEGORIES && h(CATEGORY) -> 	{ d_i, ..., d_l )
-	 *  			==> restituisce ( U h(c) for all c IN f(friend) )
+	 *  			se f(FRIEND)	= { c0, ..., c_f } in CATEGORIES && h(CATEGORY) -> 	{ d_i, ..., d_l )
+	 *  			==> restituisce ( U(unione) h(c) for all c IN f(friend) )
 	 *  @THROWS 	if this viene modificato durante l'iterazione
 	 *  				throws ConcurrentModificationException
 	 *  			if friend == null
